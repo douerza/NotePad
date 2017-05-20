@@ -775,7 +775,7 @@ public class OutputText extends Activity {
 ![outputnotelist](https://raw.githubusercontent.com/douerza/picture/master/NotePadPic/outputnotelist.png)<br>
 点击第三条“楼五四”：<br>
 ![note1](https://raw.githubusercontent.com/douerza/picture/master/NotePadPic/note1.png)<br>
-点击隐藏的菜单，选择导出笔记：
+点击隐藏的菜单，选择导出笔记：<br>
  ![outputmenu](https://raw.githubusercontent.com/douerza/picture/master/NotePadPic/outputmenu.png)<br>
 文件名默认为标题，也可自己取名，点击确认导出：<br>
 ![name1](https://raw.githubusercontent.com/douerza/picture/master/NotePadPic/name1.png)<br>
