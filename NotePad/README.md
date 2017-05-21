@@ -17,7 +17,7 @@
 ![menu](https://raw.githubusercontent.com/douerza/picture/master/NotePadPic/menu.png)<br>
 
 ## 拓展功能
-- NoteList中显示条目增加时间显示
+- NotesList中显示条目增加时间显示
 - 笔记查询（按标题查询）
 - UI美化
 - 背景更换
@@ -28,7 +28,8 @@
 源码： [NotePad](https://github.com/douerza/NotePad/tree/master/NotePad)
 
 ## 拓展功能解析
-- NoteList中显示条目增加时间显示
+
+- NotesList中显示条目增加时间显示
 
 在NotePad原应用中，笔记列表只显示了笔记的标题。如图3、图6。要对它做时间扩展，可以把时间放在标题的下方。<br>
 首先，找到列表中item的布局：noteslist_item.xml。<br>
@@ -89,7 +90,7 @@
     }
 ```
 可以看出，NotePad数据库已经存在时间信息。<br>
-再到NoteList.java文件中查看，是如何将数据装填到列表中。<br>
+再到NotesList.java文件中查看，是如何将数据装填到列表中。<br>
 可以发现，当前Activity所用到的数据被定义**在PROJECTION**中：<br>
 ```
 private static final String[] PROJECTION = new String[] {
@@ -163,7 +164,7 @@ String dateTime = format.format(date);
     android:showAsAction="always">
 </item>
 ```
-在NoteList中找到onOptionsItemSelected方法，在switch中添加搜索的case语句:<br>
+在NotesList中找到onOptionsItemSelected方法，在switch中添加搜索的case语句:<br>
 ```
  //添加搜素
     case R.id.menu_search:
@@ -174,7 +175,7 @@ String dateTime = format.format(date);
 ```
 菜单：<br>
 ![searchmenu](https://raw.githubusercontent.com/douerza/picture/master/NotePadPic/searchmenu.png)<br>
-在case语句中写跳转activity代码之前要先写好搜索的activity，新建一个名为NoteSearch的activity。由于搜索出来的也是笔记列表，所以可以模仿NoteList的activity继承ListActivity。在安卓中有个用于搜索控件：SearchView，可以把**SearchView跟ListView相结合**，**动态地显示搜索结果**。先布局搜索页面，在layout中新建布局文件note_search_list.xml：<br>
+在case语句中写跳转activity代码之前要先写好搜索的activity，新建一个名为NoteSearch的activity。由于搜索出来的也是笔记列表，所以可以模仿NotesList的activity继承ListActivity。在安卓中有个用于搜索控件：SearchView，可以把**SearchView跟ListView相结合**，**动态地显示搜索结果**。先布局搜索页面，在layout中新建布局文件note_search_list.xml：<br>
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -264,7 +265,7 @@ public class NoteSearch extends ListActivity  implements SearchView.OnQueryTextL
     }
 }
 ```
-即使我不需要使用onQueryTextSubmit方法，**onQueryTextSubmit和onQueryTextChange**两个方法也是实现接口**必须写**的方法。onListItemClick方法是点击NoteList的item跳转到对应笔记编辑界面的方法，NoteList中有这个方法，搜索出来的笔记跳转原理与NoteList中笔记一样，所以可以直接从NoteList中复制过来直接使用。<br>
+即使我不需要使用onQueryTextSubmit方法，**onQueryTextSubmit和onQueryTextChange**两个方法也是实现接口**必须写**的方法。onListItemClick方法是点击NoteList的item跳转到对应笔记编辑界面的方法，NoteList中有这个方法，搜索出来的笔记跳转原理与NotesList中笔记一样，所以可以直接从NotesList中复制过来直接使用。<br>
 使用PROJECTION，Cursor，adapter方法与时间显示的原理一样，这里不多描述，但是可以注意到adapter是用MyCursorAdapter声明的，MyCursorAdapter是继承SimpleCursorAdapter，对其中个别方法进行重写，下文UI部分会提到。<br>
 动态搜索的实现最主要的部分在onQueryTextChange方法中，在使用这个方法，要先为SearchView注册监听：<br>
 ```
@@ -299,13 +300,13 @@ String[] selectionArgs = { "%"+newText+"%" };
 
 - UI美化
 
-先给NoteList换个主题，把黑色换成白色，在AndroidManifest.xml中NotesList的Activity中添加：<br>
+先给NotesList换个主题，把黑色换成白色，在AndroidManifest.xml中NotesList的Activity中添加：<br>
 ```
 android:theme="@android:style/Theme.Holo.Light"
 ```
 改变后如下图：<br>
 ![main](https://raw.githubusercontent.com/douerza/picture/master/NotePadPic/main.png)<br>
-UI美化主要是让NoteList和NoteSearch每条笔记都有背景色，并且能保存。要做到保存颜色的数据，最直接的办法就是在数据库中添加一个颜色的字段，在这之前在NotePad契约类中添加：<br>
+UI美化主要是让NotesList和NoteSearch每条笔记都有背景色，并且能保存。要做到保存颜色的数据，最直接的办法就是在数据库中添加一个颜色的字段，在这之前在NotePad契约类中添加：<br>
 ```
 public static final String COLUMN_NAME_BACK_COLOR = "color";
 ```
@@ -386,7 +387,7 @@ public class MyCursorAdapter extends SimpleCursorAdapter {
     }
 }
 ```
-NoteList中的PROJECTION添加颜色项：<br>
+NotesList中的PROJECTION添加颜色项：<br>
 ```
 private static final String[] PROJECTION = new String[] {
             NotePad.Notes._ID, // 0
@@ -396,7 +397,7 @@ private static final String[] PROJECTION = new String[] {
             NotePad.Notes.COLUMN_NAME_BACK_COLOR,
     };
 ```
-并且将NoteList中用的SimpleCursorAdapter改使用MyCursorAdapter：<br>
+并且将NotesList中用的SimpleCursorAdapter改使用MyCursorAdapter：<br>
 ```
  //修改为可以填充颜色的自定义的adapter，自定义的代码在MyCursorAdapter.java中
 adapter = new MyCursorAdapter(
@@ -821,7 +822,7 @@ public class OutputText extends Activity {
         </menu>
     </item>
 ```
-在NoteList菜单switch下添加case：<br>
+在NotesList菜单switch下添加case：<br>
 ```
 //创建时间排序
     case R.id.menu_sort1:
@@ -893,3 +894,8 @@ private int[] viewIDs = { android.R.id.text1 , R.id.text1_time };
 ![modifytime](https://raw.githubusercontent.com/douerza/picture/master/NotePadPic/modifytime.png)<br>
 颜色排序：<br>
 ![colorsort](https://raw.githubusercontent.com/douerza/picture/master/NotePadPic/colorsort.png)<br>
+
+- 扩展后的目录结构
+
+![dirstructure1](https://raw.githubusercontent.com/douerza/picture/master/NotePadPic/dirstructure1.png)<br>
+![dirstructure2](https://raw.githubusercontent.com/douerza/picture/master/NotePadPic/dirstructure2.png)<br>
